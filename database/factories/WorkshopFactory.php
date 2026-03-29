@@ -10,15 +10,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WorkshopFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+	/**
+	 * Define the model's default state.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function definition(): array
+	{
+		return [
+			'title' => fake()->sentence(3),
+			'description' => fake()->paragraph(),
+			'scheduled_at' => fake()->dateTimeBetween('+1 week', '+2 months'),
+			'capacity' => fake()->numberBetween(5, 25),
+		];
+	}
 }
