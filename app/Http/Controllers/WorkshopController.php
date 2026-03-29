@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Http\Resources\WorkshopResource;
 use App\Models\Workshop;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,20 +13,11 @@ class WorkshopController extends Controller
 {
 	public function index(Request $request): Response
 	{
+		$workshops = Workshop::upcoming()->with('users')->get();
+
 		return Inertia::render('Dashboard', [
-			'workshops' => Workshop::upcoming()
-				->withCount('users')
-				->get()
-				->map(fn($workshop) => [
-					'id' => $workshop->id,
-					'title' => $workshop->title,
-					'description' => $workshop->description,
-					'scheduled_at' => $workshop->scheduled_at->format('d/m/Y H:i'),
-					'capacity' => $workshop->capacity,
-					'available_seats' => $workshop->available_seats,
-					'is_registered' => $workshop->users->contains(auth()->id()),
-				]),
-			'can_manage' => $request->user()->isAdmin(),
+			'workshops' => WorkshopResource::collection($workshops),
+			'auth_user' => new UserResource($request->user()),
 		]);
 	}
 
