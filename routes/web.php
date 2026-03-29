@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\WorkshopController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -14,7 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('/dashboard', [WorkshopController::class, 'index'])->name('dashboard');
 
 	// Registration Routes 
-	Route::post('/workshops/{workshop}/register', [RegistrationControlle::class, 'store'])->name('workshop.register');
+	Route::post('/workshops/{workshop}/register', [RegistrationController::class, 'store'])->name('workshop.register');
 	Route::delete('/workshops/{workshop}/unregister', [RegistrationController::class, 'destroy'])->name('workshop.unregister');
 
 	// Admin Routes
