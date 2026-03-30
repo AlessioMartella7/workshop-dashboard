@@ -1,10 +1,19 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
-// Riceviamo i workshop dalla WorkshopResource che abbiamo configurato nel controller
-defineProps({
+const props = defineProps({
     workshops: Object,
+    auth: Object,
+});
+
+console.log(props);
+
+const form = useForm({
+    title: '',
+    description: '',
+    scheduled_at: '',
+    capacity: 20,
 });
 </script>
 
@@ -13,12 +22,17 @@ defineProps({
 
     <AppLayout>
         <div class="mx-auto max-w-4xl">
-            <h1 class="mb-6 text-2xl font-bold">Workshop Disponibili</h1>
+            <div class="mb-6 flex items-center justify-between">
+                <h1 class="text-2xl font-bold">Workshop Disponibili</h1>
 
-            <div class="mb-4 bg-yellow-200 p-4 text-black">
-                DEBUG: Ci sono {{ workshops.data.length }} workshop caricati.
+                <button
+                    v-if="auth.user.data.is_admin"
+                    @click="showModal = true"
+                    class="rounded bg-green-600 px-4 py-2 text-white shadow hover:bg-green-700"
+                >
+                    + Nuovo Workshop
+                </button>
             </div>
-
             <div class="space-y-4">
                 <div
                     v-for="workshop in workshops.data"
