@@ -6,6 +6,7 @@ import { computed } from 'vue';
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const flash = computed(() => page.props.flash);
+console.log(user);
 </script>
 
 <template>
@@ -14,7 +15,7 @@ const flash = computed(() => page.props.flash);
             <div>
                 <strong class="text-lg">Academy Workshop</strong>
                 <span class="ml-4 text-sm text-gray-500"
-                    >Ciao, {{ user.name }} ({{ user.role }})</span
+                    >Ciao, {{ user.data.name }} ({{ user.data.role }})</span
                 >
             </div>
 
