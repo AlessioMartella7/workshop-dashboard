@@ -1,18 +1,49 @@
-<script setup lang="ts">
-import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
-import type { BreadcrumbItem } from '@/types';
+<script setup>
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-type Props = {
-    breadcrumbs?: BreadcrumbItem[];
-};
-
-withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
-});
+// Recuperiamo i dati globali che abbiamo configurato nel middleware HandleInertiaRequests
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+const flash = computed(() => page.props.flash);
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <slot />
-    </AppLayout>
+    <div class="min-h-screen bg-gray-100">
+        <nav class="flex items-center justify-between border-b bg-white p-4">
+            <div>
+                <strong class="text-lg">Academy Workshop</strong>
+                <span class="ml-4 text-sm text-gray-500"
+                    >Ciao, {{ user.name }} ({{ user.role }})</span
+                >
+            </div>
+
+            <div class="space-x-4">
+                <Link href="/dashboard" class="hover:text-blue-400"
+                    >Dashboard</Link
+                >
+                <Link
+                    href="/logout"
+                    method="post"
+                    as="button"
+                    class="text-red-600"
+                    >Logout</Link
+                >
+            </div>
+        </nav>
+
+        <div
+            v-if="flash.success"
+            class="bg-green-100 p-4 text-center text-green-800"
+        >
+            {{ flash.success }}
+        </div>
+        <div v-if="flash.error" class="bg-red-100 p-4 text-center text-red-800">
+            {{ flash.error }}
+        </div>
+
+        <main class="p-6">
+            <slot />
+        </main>
+    </div>
 </template>
