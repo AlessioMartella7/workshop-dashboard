@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="js">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
 
-const props = defineProps({
+defineProps({
     workshops: Object,
     auth: Object,
 });
