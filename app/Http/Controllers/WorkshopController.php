@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use OpenAI;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\WorkshopResource;
 use App\Models\Workshop;
@@ -40,4 +41,28 @@ class WorkshopController extends Controller
 		$workshop->delete();
 		return back()->with('success', 'Workshop rimosso correttamente.');
 	}
+
+	public function generateDescription(Request $request)
+	{
+		$request->validate(['title' => 'required|string']);
+
+		$client = OpenAI::factory()
+			->withApiKey(env('GROQ_API_KEY'))
+			->withBaseUri(env('GROQ_BASE_URL'))
+			->make();
+
+		$result = $client->chat()->create([
+			'model' => 'llama-3.1-8b-instant', // Un modello veloce e gratuito su Groq'
+			'temperature' => 0.7,
+			'messages' => [
+				['role' => 'system', 'content' => 'Sei un esperto di marketing. Scrivi una descrizione breve e accattivante (max 300 caratteri) per un workshop professionale.'],
+				['role' => 'user', 'content' => "Il titolo del workshop è: {$request->title}"],
+			],
+		]);
+
+		return response()->json([
+			'description' => $result->choices[0]->message->content
+		]);
+	}
+
 }

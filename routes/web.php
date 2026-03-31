@@ -20,10 +20,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::delete('/workshops/{workshop}/unregister', [RegistrationController::class, 'destroy'])->name('workshop.unregister');
 
 	// Admin Routes
-	Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+	Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 		Route::resource('workshops', WorkshopController::class)->except(['index', 'show']);
 	});
 
+	Route::post('/admin/generate-description', [WorkshopController::class, 'generateDescription'])
+		->middleware(['auth', 'admin']);
 });
 
 require __DIR__ . '/settings.php';
