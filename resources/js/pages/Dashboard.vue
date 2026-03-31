@@ -1,10 +1,10 @@
-<script setup>
-import AppLayout from '@/layouts/AppLayout.vue';
+<script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import axios from 'axios';
+import { ref } from 'vue';
+import AppLayout from '@/layouts/AppLayout.vue';
 
-const props = defineProps({
+defineProps({
     workshops: Object,
     auth: Object,
 });
@@ -24,10 +24,12 @@ const form = useForm({
 const suggestDescription = async () => {
     if (!form.title) {
         alert('Inserisci un titolo prima di generare la descrizione!');
+
         return;
     }
 
     isGenerating.value = true;
+
     try {
         const response = await axios.post('/admin/generate-description', {
             title: form.title,
